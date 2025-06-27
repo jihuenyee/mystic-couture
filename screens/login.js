@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StatusBar, StyleSheet, ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
     container: {
@@ -56,8 +57,17 @@ const LoginScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
+    const hasLoggedIn = await AsyncStorage.getItem('hasLoggedInBefore');
+
+    if (!hasLoggedIn) {
+        // First login
+        await AsyncStorage.setItem('hasLoggedInBefore', 'true');
+        navigation.navigate('introscene');
+    } else {
+        // Not first time
         navigation.navigate('home');
+    }
     };
 
     return (
